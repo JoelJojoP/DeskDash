@@ -1,0 +1,13 @@
+{
+    "wifi": [
+        {
+            "ssid": "ssid",
+            "pwd": "password"
+        }
+    ],
+    "gmtOffset": 0,
+    "dlOffset": 0,
+    "latitude": 0,
+    "longitude": 0,
+    "city": "city"
+}

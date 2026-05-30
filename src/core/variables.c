@@ -1,0 +1,27 @@
+#include "../../GUI.h"
+
+lv_obj_t *GUI_Screen__splashScreen;
+lv_obj_t *GUI_Bar__splashScreen__initBar;
+
+lv_obj_t *GUI_Screen__mainScreen;
+lv_obj_t *GUI_Image__mainScreen__bgImage;
+lv_obj_t *GUI_Container__mainScreen__timeContainer;
+lv_obj_t *GUI_Label__mainScreen__timeLabel;
+lv_obj_t *GUI_Label__mainScreen__dayLabel;
+lv_obj_t *GUI_Label__mainScreen__dateLabel;
+lv_obj_t *GUI_Panel__mainScreen__weatherPanel;
+lv_obj_t *GUI_Label__mainScreen__locLabel;
+lv_obj_t *GUI_Label__mainScreen__tempLabel;
+lv_obj_t *GUI_Image__mainScreen__wthIcon;
+lv_obj_t *GUI_Label__mainScreen__wthLabel;
+lv_obj_t *GUI_Label__mainScreen__minMaxLabel;
+
+lv_style_t GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle;
+lv_style_t GUI_Style__class_nO9WWVajdwferl__imageBgStyle;
+lv_style_t GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle;
+lv_style_t GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle;
+lv_style_t GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle;
+lv_style_t GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle;
+lv_style_t GUI_Style__class_qhbKUz960C5eEN__icoStyle;
+lv_style_t GUI_Style__class_dWy3Gyh9l0NT39__wthStyle;
+lv_style_t GUI_Style__class_ovYKeEQJT7E3hI__;
