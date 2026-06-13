@@ -54,14 +54,17 @@ void GUI_loadFirstScreen() {
 void GUI_initScreenContents() {
   GUI_initScreen__splashScreen();
   GUI_initScreen__mainScreen();
+  GUI_initScreen__alarmScreen();
 }
 
 void GUI_initScreenTexts() {
   GUI_initScreenTexts__splashScreen();
   GUI_initScreenTexts__mainScreen();
+  GUI_initScreenTexts__alarmScreen();
 }
 
 void GUI_initScreenStyles() {
   GUI_initScreenStyles__splashScreen();
   GUI_initScreenStyles__mainScreen();
+  GUI_initScreenStyles__alarmScreen();
 }

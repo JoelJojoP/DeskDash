@@ -32,8 +32,8 @@ https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json
 ```
 - Install the M5Stack board library from boards manager. (The code has been tested on v3.2.6)
 - Install the following libraries from the library manager:
-    - `M5Unified` by M5Stack - v0.2.13
-    - `M5GFX` by M5Stack - v0.2.19
+    - `M5Unified` by M5Stack - v0.2.17
+    - `M5GFX` by M5Stack - v0.2.22
     - `lvgl` by kisvegabor - v9.3.0
     - `FreeRTOS` by Richard Barry - v11.1.0-3
     - `ArduinoJson` by Benoit Blanchon - v7.4.3

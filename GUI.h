@@ -7,6 +7,9 @@
 
 #include "src/helpers/ui_helpers.h"
 
+#define HOME_ICON ""
+#define ALARM_ICON "⏰"
+
 LV_IMG_DECLARE(upload_bg1_ec5fd9fb2bb84319a9d53603745df739_png);
 LV_FONT_DECLARE(inter);
 LV_FONT_DECLARE(font);
@@ -21,5 +24,6 @@ LV_IMG_DECLARE(snow);
 LV_IMG_DECLARE(thunder);
 LV_IMG_DECLARE(haze);
 LV_FONT_DECLARE(poppins20px);
+LV_FONT_DECLARE(fonta32px);
 
 #endif

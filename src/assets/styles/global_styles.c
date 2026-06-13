@@ -113,4 +113,35 @@ void GUI_initGlobalStyles() {
   lv_style_set_pad_row(&GUI_Style__class_ovYKeEQJT7E3hI__, 0);
   lv_style_set_pad_column(&GUI_Style__class_ovYKeEQJT7E3hI__, 0);
   lv_style_set_layout(&GUI_Style__class_ovYKeEQJT7E3hI__, LV_LAYOUT_FLEX);
+
+  lv_style_init(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle);
+  lv_style_set_bg_color(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle,
+                        lv_color_make(37, 37, 37));
+  lv_style_set_bg_opa(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle, 255);
+  lv_style_set_radius(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle, 0);
+
+  lv_style_init(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle);
+  lv_style_set_bg_color(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle,
+                        lv_color_make(0, 0, 0));
+  lv_style_set_bg_opa(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle, 0);
+  lv_style_set_radius(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle, 0);
+
+  lv_style_init(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle);
+  lv_style_set_text_font(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
+                         &fonta32px);
+  lv_style_set_text_color(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
+                          lv_color_make(255, 255, 255));
+  lv_style_set_text_opa(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle, 255);
+  lv_style_set_text_letter_space(
+      &GUI_Style__class_L11bizL1MaPXIx__sideTextStyle, 0);
+  lv_style_set_text_line_space(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
+                               0);
+  lv_style_set_text_align(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
+                          LV_TEXT_ALIGN_CENTER);
+
+  lv_style_init(&GUI_Style__class_fAAuYI7RtRWXqZ__);
+  lv_style_set_bg_color(&GUI_Style__class_fAAuYI7RtRWXqZ__,
+                        lv_color_make(255, 255, 255));
+  lv_style_set_bg_opa(&GUI_Style__class_fAAuYI7RtRWXqZ__, 255);
+  lv_style_set_radius(&GUI_Style__class_fAAuYI7RtRWXqZ__, 0);
 }

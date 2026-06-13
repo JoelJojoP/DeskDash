@@ -15,6 +15,14 @@ lv_obj_t *GUI_Label__mainScreen__tempLabel;
 lv_obj_t *GUI_Image__mainScreen__wthIcon;
 lv_obj_t *GUI_Label__mainScreen__wthLabel;
 lv_obj_t *GUI_Label__mainScreen__minMaxLabel;
+lv_obj_t *GUI_Panel__mainScreen__sideBar;
+lv_obj_t *GUI_Button__mainScreen__homeButton;
+lv_obj_t *GUI_Label__mainScreen__homeLabel;
+lv_obj_t *GUI_Button__mainScreen__alarmButton;
+lv_obj_t *GUI_Label__mainScreen__alarmLabel;
+lv_obj_t *GUI_Panel__mainScreen__selIndicator;
+
+lv_obj_t *GUI_Screen__alarmScreen;
 
 lv_style_t GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle;
 lv_style_t GUI_Style__class_nO9WWVajdwferl__imageBgStyle;
@@ -25,3 +33,7 @@ lv_style_t GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle;
 lv_style_t GUI_Style__class_qhbKUz960C5eEN__icoStyle;
 lv_style_t GUI_Style__class_dWy3Gyh9l0NT39__wthStyle;
 lv_style_t GUI_Style__class_ovYKeEQJT7E3hI__;
+lv_style_t GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle;
+lv_style_t GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle;
+lv_style_t GUI_Style__class_L11bizL1MaPXIx__sideTextStyle;
+lv_style_t GUI_Style__class_fAAuYI7RtRWXqZ__;
