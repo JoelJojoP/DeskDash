@@ -38,7 +38,8 @@ bool isSleep = false;
 bool initDone = false;
 
 /* Function to flush draw buffer to display */
-void lv_disp_flush(lv_display_t *disp, const lv_area_t *area, uint8_t *color_p) {
+void lv_disp_flush(lv_display_t *disp, const lv_area_t *area,
+                   uint8_t *color_p) {
     uint32_t w = (area->x2 - area->x1 + 1);
     uint32_t h = (area->y2 - area->y1 + 1);
     lv_draw_sw_rgb565_swap((void *)color_p, w * h);
@@ -57,8 +58,7 @@ static void lv_indev_read(lv_indev_t *indev_driver, lv_indev_data_t *data) {
         data->point.x = tp[0].y;
         data->point.y = (720 - tp[0].x);
         data->state = LV_INDEV_STATE_PRESSED;
-        if (isSleep)
-        {
+        if (isSleep) {
             wake_up();
             isSleep = false;
         }
@@ -68,16 +68,15 @@ static void lv_indev_read(lv_indev_t *indev_driver, lv_indev_data_t *data) {
 }
 
 /* Custom tick */
-static uint32_t my_tick(void) {
-    return millis();
-}
+static uint32_t my_tick(void) { return millis(); }
 
 /* LVGL task to refresh display */
 void lvgl_task(void *pvParameters) {
     while (1) {
         if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
             lv_timer_handler();
-            if ((lv_disp_get_inactive_time(NULL) > INACTIVITY_TIMEOUT_MS) && initDone && !isSleep) {
+            if ((lv_disp_get_inactive_time(NULL) > INACTIVITY_TIMEOUT_MS) &&
+                initDone && !isSleep) {
                 go_sleep();
                 isSleep = true;
             }
@@ -88,13 +87,13 @@ void lvgl_task(void *pvParameters) {
 }
 
 int connectToWiFi() {
-    JsonDocument& cfg = model.getConfig();
+    JsonDocument &cfg = model.getConfig();
     int wifiCnt = cfg["wifiCnt"].as<int>() | 0;
     const char *ssid;
     const char *password;
     int attempts;
 
-    if(xSemaphoreTake(xWifiSemaphore, portMAX_DELAY) == pdTRUE) {
+    if (xSemaphoreTake(xWifiSemaphore, portMAX_DELAY) == pdTRUE) {
         WiFi.mode(WIFI_STA);
         for (int i = 0; i < wifiCnt; i++) {
             ssid = cfg["wifi"][i]["ssid"];
@@ -118,7 +117,7 @@ int connectToWiFi() {
 }
 
 void disconnectWiFi() {
-    if(WiFi.status() == WL_CONNECTED) {
+    if (WiFi.status() == WL_CONNECTED) {
         WiFi.disconnect(true);
     }
     WiFi.mode(WIFI_OFF);
@@ -135,9 +134,12 @@ void wthCodeToString(int wthCode, char *wthStr, size_t strSize) {
         snprintf(wthStr, strSize, "Cloudy");
     } else if (wthCode >= 45 && wthCode <= 48) {
         snprintf(wthStr, strSize, "Fog");
-    } else if ((wthCode >= 51 && wthCode <= 57) || (wthCode >= 61 && wthCode <= 67) || (wthCode >= 80 && wthCode <= 82)) {
+    } else if ((wthCode >= 51 && wthCode <= 57) ||
+               (wthCode >= 61 && wthCode <= 67) ||
+               (wthCode >= 80 && wthCode <= 82)) {
         snprintf(wthStr, strSize, "Rain");
-    } else if ((wthCode >= 71 && wthCode <= 77) || (wthCode >= 85 && wthCode <= 86)) {
+    } else if ((wthCode >= 71 && wthCode <= 77) ||
+               (wthCode >= 85 && wthCode <= 86)) {
         snprintf(wthStr, strSize, "Snow");
     } else if (wthCode >= 95 && wthCode <= 99) {
         snprintf(wthStr, strSize, "Thunderstorm");
@@ -159,9 +161,14 @@ void initializeTask(void *pvParameters) {
         } else {
             LOG_INFO("Data initialization completed");
             initDone = true;
-            xEventGroupSetBits(xDataEventGroup, TIME_UPDATE_EVENT | DAY_UPDATE_EVENT | WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT);
-            xTaskCreatePinnedToCore(updateTimeTask, "UpdateTime", 4096, NULL, 1, &xTimeUpdateTaskHandle, 0);
-            xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096, NULL, 1, &xWeatherUpdateTaskHandle, 0);
+            lv_display_trigger_activity(NULL);
+            xEventGroupSetBits(xDataEventGroup,
+                               TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
+                                   WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT);
+            xTaskCreatePinnedToCore(updateTimeTask, "UpdateTime", 4096, NULL, 1,
+                                    &xTimeUpdateTaskHandle, 0);
+            xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096,
+                                    NULL, 1, &xWeatherUpdateTaskHandle, 0);
         }
     }
     disconnectWiFi();
@@ -173,9 +180,13 @@ void updateViewTask(void *pvParameters) {
     DeskDashData data;
 
     while (1) {
-        uxBits = xEventGroupWaitBits(xDataEventGroup, TIME_UPDATE_EVENT | DAY_UPDATE_EVENT | WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT, pdTRUE, pdFALSE, portMAX_DELAY);
+        uxBits =
+            xEventGroupWaitBits(xDataEventGroup,
+                                TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
+                                    WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT,
+                                pdTRUE, pdFALSE, portMAX_DELAY);
         data = model.getData();
-        
+
         if (uxBits & TIME_UPDATE_EVENT && data.isTimeSynced) {
             char timeStr[6];
             strftime(timeStr, sizeof(timeStr), "%H:%M", &data.timeInfo);
@@ -195,8 +206,11 @@ void updateViewTask(void *pvParameters) {
             char minMaxTempStr[25];
             char wthStr[20];
             wthCodeToString(data.weather.wthCode, wthStr, sizeof(wthStr));
-            snprintf(curTempStr, sizeof(curTempStr), "%.1f°C", data.weather.curTemp);
-            snprintf(minMaxTempStr, sizeof(minMaxTempStr), "H: %.1f° | L: %.1f°", data.weather.maxTemp, data.weather.minTemp);
+            snprintf(curTempStr, sizeof(curTempStr), "%.1f°C",
+                     data.weather.curTemp);
+            snprintf(minMaxTempStr, sizeof(minMaxTempStr),
+                     "H: %.1f° | L: %.1f°", data.weather.maxTemp,
+                     data.weather.minTemp);
             view.updateWeather(curTempStr, minMaxTempStr, wthStr);
             view.updateWeatherIcon(data.weather.wthCode, data.weather.isDay);
         }
@@ -232,15 +246,18 @@ void updateWeatherTask(void *pvParameters) {
         vTaskDelay(pdMS_TO_TICKS(waitDelay)); // Retry every 10 minutes
         status = connectToWiFi();
         if (status != 0) {
-            waitDelay = 600000; // Retry every 10 minutes if WiFi connection fails
+            // Retry every 10 minutes if WiFi connection fails
+            waitDelay = 600000;
             LOG_WARN("Skipping weather update due to WiFi connection failure");
         } else {
             if (model.updateWeather() == 0) {
                 xEventGroupSetBits(xDataEventGroup, WEATHER_UPDATE_EVENT);
-                waitDelay = 3600000; // Reset to 1 hour on successful update
+                // Reset to 1 hour on successful update
+                waitDelay = 3600000;
                 LOG_INFO("Weather update successful");
             } else {
-                waitDelay = 600000; // Retry every 10 minutes if weather update fails
+                // Retry every 10 minutes if weather update fails
+                waitDelay = 600000;
                 LOG_WARN("Weather update failed");
             }
         }
@@ -281,8 +298,10 @@ void setup() {
 
     // Allocate draw buffers from PSRAM
     LOG_INFO("Allocating memory for draw buffer");
-    drawBuf1 = (uint8_t *)heap_caps_aligned_alloc(64, DRAW_BUF_SIZE, MALLOC_CAP_SPIRAM);
-    drawBuf2 = (uint8_t *)heap_caps_aligned_alloc(64, DRAW_BUF_SIZE, MALLOC_CAP_SPIRAM);
+    drawBuf1 = (uint8_t *)heap_caps_aligned_alloc(64, DRAW_BUF_SIZE,
+                                                  MALLOC_CAP_SPIRAM);
+    drawBuf2 = (uint8_t *)heap_caps_aligned_alloc(64, DRAW_BUF_SIZE,
+                                                  MALLOC_CAP_SPIRAM);
 
     if (drawBuf1 == NULL || drawBuf2 == NULL) {
         LOG_ERROR("Failed to allocate memory for draw buffer!");
@@ -300,7 +319,8 @@ void setup() {
 
     glbDisp = lv_display_create(TFT_HOR_RES, TFT_VER_RES);
     lv_display_set_flush_cb(glbDisp, lv_disp_flush);
-    lv_display_set_buffers(glbDisp, drawBuf1, drawBuf2, DRAW_BUF_SIZE, LV_DISPLAY_RENDER_MODE_FULL);
+    lv_display_set_buffers(glbDisp, drawBuf1, drawBuf2, DRAW_BUF_SIZE,
+                           LV_DISPLAY_RENDER_MODE_FULL);
 
     glbIndev = lv_indev_create();
     lv_indev_set_type(glbIndev, LV_INDEV_TYPE_POINTER);
@@ -319,15 +339,16 @@ void setup() {
 
     // Create Tasks
     LOG_INFO("Creating LVGL task");
-    xTaskCreatePinnedToCore(lvgl_task, "Lvgl", 8192, NULL, 5, &xLvglTaskHandle, 1);
+    xTaskCreatePinnedToCore(lvgl_task, "Lvgl", 8192, NULL, 5, &xLvglTaskHandle,
+                            1);
     LOG_INFO("Creating update view task");
-    xTaskCreatePinnedToCore(updateViewTask, "UpdateView", 16384, NULL, 1, &xUpdateViewTask, 0);
+    xTaskCreatePinnedToCore(updateViewTask, "UpdateView", 16384, NULL, 1,
+                            &xUpdateViewTask, 0);
     LOG_INFO("Creating data initialization task");
-    xTaskCreatePinnedToCore(initializeTask, "DataInit", 4096, NULL, 1, &xDataInitTaskHandle, 0);
+    xTaskCreatePinnedToCore(initializeTask, "DataInit", 4096, NULL, 1,
+                            &xDataInitTaskHandle, 0);
 
     LOG_INFO("Completed setup");
 }
 
-void loop() {
-    vTaskDelay(10000);
-}
+void loop() { vTaskDelay(10000); }

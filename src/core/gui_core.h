@@ -18,6 +18,10 @@ extern "C" {
 #endif
 
 // Screen-specific function declarations
+void GUI_initScreen__commonElement();
+void GUI_initScreenTexts__commonElement();
+void GUI_initScreenStyles__commonElement();
+
 void GUI_initScreen__splashScreen();
 void GUI_initScreenTexts__splashScreen();
 void GUI_initScreenStyles__splashScreen();
@@ -30,19 +34,22 @@ void GUI_initScreen__alarmScreen();
 void GUI_initScreenTexts__alarmScreen();
 void GUI_initScreenStyles__alarmScreen();
 
-extern lv_style_t GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle;
-extern lv_style_t GUI_Style__class_nO9WWVajdwferl__imageBgStyle;
-extern lv_style_t GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle;
-extern lv_style_t GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle;
-extern lv_style_t GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle;
-extern lv_style_t GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle;
-extern lv_style_t GUI_Style__class_qhbKUz960C5eEN__icoStyle;
-extern lv_style_t GUI_Style__class_dWy3Gyh9l0NT39__wthStyle;
-extern lv_style_t GUI_Style__class_ovYKeEQJT7E3hI__;
-extern lv_style_t GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle;
-extern lv_style_t GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle;
-extern lv_style_t GUI_Style__class_L11bizL1MaPXIx__sideTextStyle;
-extern lv_style_t GUI_Style__class_fAAuYI7RtRWXqZ__;
+extern lv_style_t GUI_Style__defaultBgStyle;
+extern lv_style_t GUI_Style__bgImageStyle;
+extern lv_style_t GUI_Style__timeStyle;
+extern lv_style_t GUI_Style__dateDispStyle;
+extern lv_style_t GUI_Style__defaultPanelStyle;
+extern lv_style_t GUI_Style__tempDispStyle;
+extern lv_style_t GUI_Style__wthIconStyle;
+extern lv_style_t GUI_Style__wthLabelStyle;
+extern lv_style_t GUI_Style__lineStyle;
+extern lv_style_t GUI_Style__fcWthIconStyle;
+extern lv_style_t GUI_Style__class_ag0ku4tzpzkW1P__fcTimeStyle;
+extern lv_style_t GUI_Style__fcTempStyle;
+extern lv_style_t GUI_Style__sideBarStyle;
+extern lv_style_t GUI_Style__sideButStyle;
+extern lv_style_t GUI_Style__sideTextStyle;
+extern lv_style_t GUI_Style__sideSelIndStyle;
 
 void GUI_load();
 
@@ -75,8 +82,8 @@ void GUI_initGlobalStyles();
 
 void GUI_initAnimations();
 
-void GUI_event__Button__mainScreen__homeButton__Clicked(lv_event_t *event);
-void GUI_event__Button__mainScreen__alarmButton__Clicked(lv_event_t *event);
+void GUI_event__Button__topLayer__homeButton__Clicked(lv_event_t *event);
+void GUI_event__Button__topLayer__alarmButton__Clicked(lv_event_t *event);
 
 #ifdef __cplusplus
 } /*extern "C"*/

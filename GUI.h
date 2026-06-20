@@ -9,11 +9,17 @@
 
 #define HOME_ICON ""
 #define ALARM_ICON "⏰"
+#define SETTING_ICON ""
+#define WIFI_ICON ""
+#define REFRESH_ICON ""
 
-LV_IMG_DECLARE(upload_bg1_ec5fd9fb2bb84319a9d53603745df739_png);
-LV_FONT_DECLARE(inter);
-LV_FONT_DECLARE(font);
-LV_FONT_DECLARE(inter100px);
+LV_IMG_DECLARE(bg);
+LV_FONT_DECLARE(interbold132px);
+LV_FONT_DECLARE(poppins36px);
+LV_FONT_DECLARE(inter80px);
+LV_FONT_DECLARE(poppins20px);
+LV_FONT_DECLARE(interbold24px);
+LV_FONT_DECLARE(fonta32px);
 LV_IMG_DECLARE(sun);
 LV_IMG_DECLARE(moon);
 LV_IMG_DECLARE(sun_cloud);
@@ -23,7 +29,5 @@ LV_IMG_DECLARE(rain);
 LV_IMG_DECLARE(snow);
 LV_IMG_DECLARE(thunder);
 LV_IMG_DECLARE(haze);
-LV_FONT_DECLARE(poppins20px);
-LV_FONT_DECLARE(fonta32px);
 
 #endif

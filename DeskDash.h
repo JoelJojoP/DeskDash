@@ -1,14 +1,14 @@
-#include <lvgl.h>
-#include <M5Unified.h>
-#include <M5GFX.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <time.h>
-#include <FreeRTOS.h>
-#include "GUI.h"
 #include "FS.h"
-#include <LittleFS.h>
+#include "GUI.h"
 #include <ArduinoJson.h>
+#include <FreeRTOS.h>
+#include <HTTPClient.h>
+#include <LittleFS.h>
+#include <M5GFX.h>
+#include <M5Unified.h>
+#include <WiFi.h>
+#include <lvgl.h>
+#include <time.h>
 
 /* Logging */
 #define LOG_LEVEL_NONE 0
@@ -20,25 +20,28 @@
 #define ACTIVE_LOG_LEVEL LOG_LEVEL_ERROR
 
 #if ACTIVE_LOG_LEVEL >= LOG_LEVEL_ERROR
-#define LOG_ERROR(fmt, ...) xSemaphoreTake(xUartSemaphore, portMAX_DELAY); \
-                            Serial.printf("[ERROR] " fmt "\n", ##__VA_ARGS__); \
-                            xSemaphoreGive(xUartSemaphore)
+#define LOG_ERROR(fmt, ...)                                                    \
+    xSemaphoreTake(xUartSemaphore, portMAX_DELAY);                             \
+    Serial.printf("[ERROR] " fmt "\n", ##__VA_ARGS__);                         \
+    xSemaphoreGive(xUartSemaphore)
 #else
 #define LOG_ERROR(fmt, ...)
 #endif
 
 #if ACTIVE_LOG_LEVEL >= LOG_LEVEL_WARN
-#define LOG_WARN(fmt, ...) xSemaphoreTake(xUartSemaphore, portMAX_DELAY); \
-                            Serial.printf("[WARN] " fmt "\n", ##__VA_ARGS__); \
-                            xSemaphoreGive(xUartSemaphore)
+#define LOG_WARN(fmt, ...)                                                     \
+    xSemaphoreTake(xUartSemaphore, portMAX_DELAY);                             \
+    Serial.printf("[WARN] " fmt "\n", ##__VA_ARGS__);                          \
+    xSemaphoreGive(xUartSemaphore)
 #else
 #define LOG_WARN(fmt, ...)
 #endif
 
 #if ACTIVE_LOG_LEVEL >= LOG_LEVEL_INFO
-#define LOG_INFO(fmt, ...) xSemaphoreTake(xUartSemaphore, portMAX_DELAY); \
-                            Serial.printf("[INFO] " fmt "\n", ##__VA_ARGS__); \
-                            xSemaphoreGive(xUartSemaphore)
+#define LOG_INFO(fmt, ...)                                                     \
+    xSemaphoreTake(xUartSemaphore, portMAX_DELAY);                             \
+    Serial.printf("[INFO] " fmt "\n", ##__VA_ARGS__);                          \
+    xSemaphoreGive(xUartSemaphore)
 #else
 #define LOG_INFO(fmt, ...)
 #endif
@@ -80,31 +83,31 @@ typedef struct {
 } DeskDashData;
 
 class DeskDashModel {
-    private:
-        DeskDashData data;
-        JsonDocument cfg;
-    
-    public:
-        DeskDashModel();
-        int setConfig(const char *configFilePath);
-        int updateWeather();
-        void updateTime();
-        int initData();
-        DeskDashData getData();
-        JsonDocument& getConfig();
+  private:
+    DeskDashData data;
+    JsonDocument cfg;
+
+  public:
+    DeskDashModel();
+    int setConfig(const char *configFilePath);
+    int updateWeather();
+    void updateTime();
+    int initData();
+    DeskDashData getData();
+    JsonDocument &getConfig();
 };
 
 class DeskDashView {
-    private:
-    
-    public:
-        DeskDashView();
-        void changeScreen();
-        void updateTime(const char *timeStr);
-        void updateDate(const char *dateStr, const char *dayStr);
-        void updateWeather(const char *curTempStr, const char *minMaxTempStr, const char *wthStr);
-        void updateWeatherIcon(int wthCode, int isDay = 1);
-        void updateLocation(const char *locationStr);
+  private:
+  public:
+    DeskDashView();
+    void changeScreen();
+    void updateTime(const char *timeStr);
+    void updateDate(const char *dateStr, const char *dayStr);
+    void updateWeather(const char *curTempStr, const char *minMaxTempStr,
+                       const char *wthStr);
+    void updateWeatherIcon(int wthCode, int isDay = 1);
+    void updateLocation(const char *locationStr);
 };
 
 /* Function declarations */

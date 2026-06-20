@@ -1,147 +1,129 @@
 #include "../../../GUI.h"
 
 void GUI_initGlobalStyles() {
-  lv_style_init(&GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle);
-  lv_style_set_bg_color(&GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle,
-                        lv_color_make(0, 0, 0));
-  lv_style_set_bg_opa(&GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle, 255);
-  lv_style_set_radius(&GUI_Style__class_ee5haLh6BPfC7X__blackBgStyle, 0);
+    lv_style_init(&GUI_Style__defaultBgStyle);
+    lv_style_set_bg_color(&GUI_Style__defaultBgStyle, lv_color_make(0, 0, 0));
+    lv_style_set_bg_opa(&GUI_Style__defaultBgStyle, 0);
 
-  lv_style_init(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle);
-  lv_style_set_min_width(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle, 0);
-  lv_style_set_max_width(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle, 1280);
-  lv_style_set_min_height(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle, 0);
-  lv_style_set_max_height(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle, 720);
-//   lv_style_set_transform_scale_x(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle,
-//                                  2048);
-//   lv_style_set_transform_scale_y(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle,
-//                                  2048);
-  lv_style_set_transform_rotation(
-      &GUI_Style__class_nO9WWVajdwferl__imageBgStyle, 0);
-  lv_style_set_transform_pivot_x(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle,
-                                 80);
-  lv_style_set_transform_pivot_y(&GUI_Style__class_nO9WWVajdwferl__imageBgStyle,
-                                 45);
+    lv_style_init(&GUI_Style__bgImageStyle);
+    lv_style_set_transform_pivot_y(&GUI_Style__bgImageStyle, 45);
+    lv_style_set_transform_pivot_x(&GUI_Style__bgImageStyle, 80);
+    lv_style_set_transform_rotation(&GUI_Style__bgImageStyle, 0);
+    // lv_style_set_transform_scale_y(&GUI_Style__bgImageStyle, 2048);
+    // lv_style_set_transform_scale_x(&GUI_Style__bgImageStyle, 2048);
+    lv_style_set_max_height(&GUI_Style__bgImageStyle, 720);
+    lv_style_set_min_height(&GUI_Style__bgImageStyle, 0);
+    lv_style_set_max_width(&GUI_Style__bgImageStyle, 1280);
+    lv_style_set_min_width(&GUI_Style__bgImageStyle, 0);
 
-  lv_style_init(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle);
-  lv_style_set_text_font(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle,
-                         &inter);
-  lv_style_set_text_color(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle,
+    lv_style_init(&GUI_Style__timeStyle);
+    lv_style_set_text_font(&GUI_Style__timeStyle, &interbold132px);
+    lv_style_set_text_color(&GUI_Style__timeStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__timeStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__timeStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__timeStyle, 0);
+    lv_style_set_text_align(&GUI_Style__timeStyle, LV_TEXT_ALIGN_CENTER);
+
+    lv_style_init(&GUI_Style__dateDispStyle);
+    lv_style_set_text_font(&GUI_Style__dateDispStyle, &poppins36px);
+    lv_style_set_text_color(&GUI_Style__dateDispStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__dateDispStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__dateDispStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__dateDispStyle, 0);
+    lv_style_set_text_align(&GUI_Style__dateDispStyle, LV_TEXT_ALIGN_CENTER);
+
+    lv_style_init(&GUI_Style__defaultPanelStyle);
+    lv_style_set_bg_color(&GUI_Style__defaultPanelStyle,
                           lv_color_make(255, 255, 255));
-  lv_style_set_text_opa(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle, 255);
-  lv_style_set_text_letter_space(
-      &GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle, 0);
-  lv_style_set_text_line_space(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle,
-                               0);
-  lv_style_set_text_align(&GUI_Style__class_z25cHb6hZ3yXcf__timeDispStyle,
-                          LV_TEXT_ALIGN_LEFT);
+    lv_style_set_bg_opa(&GUI_Style__defaultPanelStyle, 31);
+    lv_style_set_radius(&GUI_Style__defaultPanelStyle, 30);
+    lv_style_set_border_color(&GUI_Style__defaultPanelStyle,
+                              lv_color_make(139, 139, 139));
+    lv_style_set_border_opa(&GUI_Style__defaultPanelStyle, 255);
+    lv_style_set_border_width(&GUI_Style__defaultPanelStyle, 2);
+    lv_style_set_border_side(&GUI_Style__defaultPanelStyle,
+                             LV_BORDER_SIDE_TOP | LV_BORDER_SIDE_RIGHT |
+                                 LV_BORDER_SIDE_BOTTOM | LV_BORDER_SIDE_LEFT);
 
-  lv_style_init(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle);
-  lv_style_set_text_font(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle,
-                         &font);
-  lv_style_set_text_color(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle,
+    lv_style_init(&GUI_Style__tempDispStyle);
+    lv_style_set_text_font(&GUI_Style__tempDispStyle, &inter80px);
+    lv_style_set_text_color(&GUI_Style__tempDispStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__tempDispStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__tempDispStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__tempDispStyle, 0);
+    lv_style_set_text_align(&GUI_Style__tempDispStyle, LV_TEXT_ALIGN_LEFT);
+
+    lv_style_init(&GUI_Style__wthIconStyle);
+    lv_style_set_min_width(&GUI_Style__wthIconStyle, 0);
+    lv_style_set_max_width(&GUI_Style__wthIconStyle, 96);
+    lv_style_set_min_height(&GUI_Style__wthIconStyle, 0);
+    lv_style_set_max_height(&GUI_Style__wthIconStyle, 96);
+    // lv_style_set_transform_scale_x(&GUI_Style__wthIconStyle, 512);
+    // lv_style_set_transform_scale_y(&GUI_Style__wthIconStyle, 512);
+    lv_style_set_transform_rotation(&GUI_Style__wthIconStyle, 0);
+    lv_style_set_transform_pivot_x(&GUI_Style__wthIconStyle, 24);
+    lv_style_set_transform_pivot_y(&GUI_Style__wthIconStyle, 24);
+
+    lv_style_init(&GUI_Style__wthLabelStyle);
+    lv_style_set_text_font(&GUI_Style__wthLabelStyle, &poppins20px);
+    lv_style_set_text_color(&GUI_Style__wthLabelStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__wthLabelStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__wthLabelStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__wthLabelStyle, 0);
+    lv_style_set_text_align(&GUI_Style__wthLabelStyle, LV_TEXT_ALIGN_CENTER);
+
+    lv_style_init(&GUI_Style__lineStyle);
+    lv_style_set_line_color(&GUI_Style__lineStyle, lv_color_make(255, 255, 255));
+    lv_style_set_line_opa(&GUI_Style__lineStyle, 255);
+    lv_style_set_line_width(&GUI_Style__lineStyle, 2);
+    lv_style_set_line_rounded(&GUI_Style__lineStyle, false);
+
+    lv_style_init(&GUI_Style__fcWthIconStyle);
+    lv_style_set_min_width(&GUI_Style__fcWthIconStyle, 0);
+    lv_style_set_max_width(&GUI_Style__fcWthIconStyle, 8000);
+    lv_style_set_min_height(&GUI_Style__fcWthIconStyle, 0);
+    lv_style_set_max_height(&GUI_Style__fcWthIconStyle, 8000);
+    // lv_style_set_transform_scale_x(&GUI_Style__fcWthIconStyle, 370);
+    // lv_style_set_transform_scale_y(&GUI_Style__fcWthIconStyle, 370);
+    lv_style_set_transform_rotation(&GUI_Style__fcWthIconStyle, 0);
+    lv_style_set_transform_pivot_x(&GUI_Style__fcWthIconStyle, 24);
+    lv_style_set_transform_pivot_y(&GUI_Style__fcWthIconStyle, 24);
+
+    lv_style_init(&GUI_Style__fcTempStyle);
+    lv_style_set_text_font(&GUI_Style__fcTempStyle, &interbold24px);
+    lv_style_set_text_color(&GUI_Style__fcTempStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__fcTempStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__fcTempStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__fcTempStyle, 0);
+    lv_style_set_text_align(&GUI_Style__fcTempStyle, LV_TEXT_ALIGN_LEFT);
+
+    lv_style_init(&GUI_Style__sideBarStyle);
+    lv_style_set_bg_color(&GUI_Style__sideBarStyle, lv_color_make(37, 37, 37));
+    lv_style_set_bg_opa(&GUI_Style__sideBarStyle, 255);
+    lv_style_set_radius(&GUI_Style__sideBarStyle, 0);
+
+    lv_style_init(&GUI_Style__sideButStyle);
+    lv_style_set_bg_color(&GUI_Style__sideButStyle, lv_color_make(0, 0, 0));
+    lv_style_set_bg_opa(&GUI_Style__sideButStyle, 0);
+    lv_style_set_radius(&GUI_Style__sideButStyle, 0);
+
+    lv_style_init(&GUI_Style__sideTextStyle);
+    lv_style_set_text_font(&GUI_Style__sideTextStyle, &fonta32px);
+    lv_style_set_text_color(&GUI_Style__sideTextStyle,
+                            lv_color_make(255, 255, 255));
+    lv_style_set_text_opa(&GUI_Style__sideTextStyle, 255);
+    lv_style_set_text_letter_space(&GUI_Style__sideTextStyle, 0);
+    lv_style_set_text_line_space(&GUI_Style__sideTextStyle, 0);
+    lv_style_set_text_align(&GUI_Style__sideTextStyle, LV_TEXT_ALIGN_CENTER);
+
+    lv_style_init(&GUI_Style__sideSelIndStyle);
+    lv_style_set_bg_color(&GUI_Style__sideSelIndStyle,
                           lv_color_make(255, 255, 255));
-  lv_style_set_text_opa(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle, 255);
-  lv_style_set_text_letter_space(
-      &GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle, 0);
-  lv_style_set_text_line_space(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle,
-                               0);
-  lv_style_set_text_align(&GUI_Style__class_dQqT0mpaLpxNFX__dateDispStyle,
-                          LV_TEXT_ALIGN_LEFT);
-
-  lv_style_init(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle);
-  lv_style_set_bg_color(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle,
-                        lv_color_make(255, 255, 255));
-  lv_style_set_bg_opa(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle, 31);
-  lv_style_set_radius(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle, 30);
-  lv_style_set_border_color(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle,
-                            lv_color_make(139, 139, 139));
-  lv_style_set_border_opa(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle, 255);
-  lv_style_set_border_width(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle, 2);
-  lv_style_set_border_side(&GUI_Style__class_hbZ9trKSkKmFm7__defPanelStyle,
-                           LV_BORDER_SIDE_TOP | LV_BORDER_SIDE_RIGHT |
-                               LV_BORDER_SIDE_BOTTOM | LV_BORDER_SIDE_LEFT);
-
-  lv_style_init(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle);
-  lv_style_set_text_font(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle,
-                         &inter100px);
-  lv_style_set_text_color(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle,
-                          lv_color_make(255, 255, 255));
-  lv_style_set_text_opa(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle, 255);
-  lv_style_set_text_letter_space(
-      &GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle, 0);
-  lv_style_set_text_line_space(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle,
-                               0);
-  lv_style_set_text_align(&GUI_Style__class_MUYJKm3UpbRtLk__tempDispStyle,
-                          LV_TEXT_ALIGN_LEFT);
-
-  lv_style_init(&GUI_Style__class_qhbKUz960C5eEN__icoStyle);
-  lv_style_set_min_width(&GUI_Style__class_qhbKUz960C5eEN__icoStyle, 0);
-  lv_style_set_max_width(&GUI_Style__class_qhbKUz960C5eEN__icoStyle, 96);
-  lv_style_set_min_height(&GUI_Style__class_qhbKUz960C5eEN__icoStyle, 0);
-  lv_style_set_max_height(&GUI_Style__class_qhbKUz960C5eEN__icoStyle, 96);
-//   lv_style_set_transform_scale_x(&GUI_Style__class_qhbKUz960C5eEN__icoStyle,
-//                                  512);
-//   lv_style_set_transform_scale_y(&GUI_Style__class_qhbKUz960C5eEN__icoStyle,
-//                                  512);
-  lv_style_set_transform_rotation(&GUI_Style__class_qhbKUz960C5eEN__icoStyle,
-                                  0);
-  lv_style_set_transform_pivot_x(&GUI_Style__class_qhbKUz960C5eEN__icoStyle,
-                                 24);
-  lv_style_set_transform_pivot_y(&GUI_Style__class_qhbKUz960C5eEN__icoStyle,
-                                 24);
-
-  lv_style_init(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle);
-  lv_style_set_text_font(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle,
-                         &poppins20px);
-  lv_style_set_text_color(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle,
-                          lv_color_make(255, 255, 255));
-  lv_style_set_text_opa(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle, 255);
-  lv_style_set_text_letter_space(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle, 0);
-  lv_style_set_text_line_space(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle, 0);
-  lv_style_set_text_align(&GUI_Style__class_dWy3Gyh9l0NT39__wthStyle,
-                          LV_TEXT_ALIGN_RIGHT);
-
-  lv_style_init(&GUI_Style__class_ovYKeEQJT7E3hI__);
-  lv_style_set_flex_flow(&GUI_Style__class_ovYKeEQJT7E3hI__, LV_FLEX_FLOW_ROW);
-  lv_style_set_flex_main_place(&GUI_Style__class_ovYKeEQJT7E3hI__,
-                               LV_FLEX_ALIGN_START);
-  lv_style_set_flex_track_place(&GUI_Style__class_ovYKeEQJT7E3hI__,
-                                LV_FLEX_ALIGN_START);
-  lv_style_set_flex_cross_place(&GUI_Style__class_ovYKeEQJT7E3hI__,
-                                LV_FLEX_ALIGN_START);
-  lv_style_set_pad_row(&GUI_Style__class_ovYKeEQJT7E3hI__, 0);
-  lv_style_set_pad_column(&GUI_Style__class_ovYKeEQJT7E3hI__, 0);
-  lv_style_set_layout(&GUI_Style__class_ovYKeEQJT7E3hI__, LV_LAYOUT_FLEX);
-
-  lv_style_init(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle);
-  lv_style_set_bg_color(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle,
-                        lv_color_make(37, 37, 37));
-  lv_style_set_bg_opa(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle, 255);
-  lv_style_set_radius(&GUI_Style__class_S7dDwgCAuB7Nxa__sideBarStyle, 0);
-
-  lv_style_init(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle);
-  lv_style_set_bg_color(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle,
-                        lv_color_make(0, 0, 0));
-  lv_style_set_bg_opa(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle, 0);
-  lv_style_set_radius(&GUI_Style__class_5lXjjcQvO2YFLl__buttonStyle, 0);
-
-  lv_style_init(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle);
-  lv_style_set_text_font(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
-                         &fonta32px);
-  lv_style_set_text_color(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
-                          lv_color_make(255, 255, 255));
-  lv_style_set_text_opa(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle, 255);
-  lv_style_set_text_letter_space(
-      &GUI_Style__class_L11bizL1MaPXIx__sideTextStyle, 0);
-  lv_style_set_text_line_space(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
-                               0);
-  lv_style_set_text_align(&GUI_Style__class_L11bizL1MaPXIx__sideTextStyle,
-                          LV_TEXT_ALIGN_CENTER);
-
-  lv_style_init(&GUI_Style__class_fAAuYI7RtRWXqZ__);
-  lv_style_set_bg_color(&GUI_Style__class_fAAuYI7RtRWXqZ__,
-                        lv_color_make(255, 255, 255));
-  lv_style_set_bg_opa(&GUI_Style__class_fAAuYI7RtRWXqZ__, 255);
-  lv_style_set_radius(&GUI_Style__class_fAAuYI7RtRWXqZ__, 0);
+    lv_style_set_bg_opa(&GUI_Style__sideSelIndStyle, 255);
+    lv_style_set_radius(&GUI_Style__sideSelIndStyle, 0);
 }

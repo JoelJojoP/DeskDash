@@ -61,11 +61,9 @@ int DeskDashModel::initData() {
     return status;
 }
 
-void DeskDashModel::updateTime() {
-    getLocalTime(&data.timeInfo);
-}
+void DeskDashModel::updateTime() { getLocalTime(&data.timeInfo); }
 
-int DeskDashModel::updateWeather() { 
+int DeskDashModel::updateWeather() {
     const float latitude = cfg["latitude"].as<float>();
     const float longitude = cfg["longitude"].as<float>();
 
@@ -73,7 +71,12 @@ int DeskDashModel::updateWeather() {
     JsonDocument weatherDoc;
 
     char url[200];
-    snprintf(url, sizeof(url), "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f&daily=temperature_2m_max,temperature_2m_min&current=temperature_2m,weather_code,is_day&timezone=auto&forecast_days=1", latitude, longitude);
+    snprintf(url, sizeof(url),
+             "https://api.open-meteo.com/v1/"
+             "forecast?latitude=%.4f&longitude=%.4f&daily=temperature_2m_max,"
+             "temperature_2m_min&current=temperature_2m,weather_code,is_day&"
+             "timezone=auto&forecast_days=1",
+             latitude, longitude);
 
     http.begin(url);
     int httpResCode = http.GET();
@@ -84,30 +87,30 @@ int DeskDashModel::updateWeather() {
             LOG_ERROR("Failed to parse weather data: %s", error.c_str());
             return -1;
         }
-        data.weather.curTemp = weatherDoc["current"]["temperature_2m"].as<float>();
-        data.weather.maxTemp = weatherDoc["daily"]["temperature_2m_max"][0].as<float>();
-        data.weather.minTemp = weatherDoc["daily"]["temperature_2m_min"][0].as<float>();
+        data.weather.curTemp =
+            weatherDoc["current"]["temperature_2m"].as<float>();
+        data.weather.maxTemp =
+            weatherDoc["daily"]["temperature_2m_max"][0].as<float>();
+        data.weather.minTemp =
+            weatherDoc["daily"]["temperature_2m_min"][0].as<float>();
         data.weather.wthCode = weatherDoc["current"]["weather_code"].as<int>();
         data.weather.isDay = weatherDoc["current"]["is_day"].as<int>();
     } else if (httpResCode < 0) {
         LOG_WARN("Weather update failed, not connected to network");
         return -1;
     } else {
-        LOG_ERROR("Failed to fetch weather data. HTTP response code: %d", httpResCode);
+        LOG_ERROR("Failed to fetch weather data. HTTP response code: %d",
+                  httpResCode);
         return -2;
     }
 
-    if(!data.isWthInitDone) {
+    if (!data.isWthInitDone) {
         data.isWthInitDone = true;
     }
 
     return 0;
 }
 
-DeskDashData DeskDashModel::getData() {
-    return data;
-}
+DeskDashData DeskDashModel::getData() { return data; }
 
-JsonDocument& DeskDashModel::getConfig() {
-    return cfg;
-}
+JsonDocument &DeskDashModel::getConfig() { return cfg; }

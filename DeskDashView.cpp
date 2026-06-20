@@ -7,7 +7,7 @@ DeskDashView::DeskDashView() {
 void DeskDashView::changeScreen() {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         lv_screen_load(GUI_Screen__mainScreen);
-        lv_obj_remove_flag(GUI_Panel__mainScreen__sideBar, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(GUI_Panel__topLayer__sideBar, LV_OBJ_FLAG_HIDDEN);
         xSemaphoreGive(xGuiSemaphore);
     }
 }
@@ -27,7 +27,9 @@ void DeskDashView::updateDate(const char *dateStr, const char *dayStr) {
     }
 }
 
-void DeskDashView::updateWeather(const char *curTempStr, const char *minMaxTempStr, const char *wthStr) {
+void DeskDashView::updateWeather(const char *curTempStr,
+                                 const char *minMaxTempStr,
+                                 const char *wthStr) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         lv_label_set_text(GUI_Label__mainScreen__tempLabel, curTempStr);
         lv_label_set_text(GUI_Label__mainScreen__minMaxLabel, minMaxTempStr);
@@ -41,24 +43,29 @@ void DeskDashView::updateWeatherIcon(int wthCode, int isDay) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         if (wthCode != -1) {
             if (wthCode == 0) {
-                if(isDay) {
+                if (isDay) {
                     lv_image_set_src(GUI_Image__mainScreen__wthIcon, &sun);
                 } else {
                     lv_image_set_src(GUI_Image__mainScreen__wthIcon, &moon);
                 }
             } else if (wthCode >= 1 && wthCode <= 2) {
-                if(isDay) {
-                    lv_image_set_src(GUI_Image__mainScreen__wthIcon, &sun_cloud);
+                if (isDay) {
+                    lv_image_set_src(GUI_Image__mainScreen__wthIcon,
+                                     &sun_cloud);
                 } else {
-                    lv_image_set_src(GUI_Image__mainScreen__wthIcon, &moon_cloud);
+                    lv_image_set_src(GUI_Image__mainScreen__wthIcon,
+                                     &moon_cloud);
                 }
             } else if (wthCode == 3) {
                 lv_image_set_src(GUI_Image__mainScreen__wthIcon, &cloud);
             } else if (wthCode >= 45 && wthCode <= 48) {
                 lv_image_set_src(GUI_Image__mainScreen__wthIcon, &haze);
-            } else if ((wthCode >= 51 && wthCode <= 57) || (wthCode >= 61 && wthCode <= 67) || (wthCode >= 80 && wthCode <= 82)) {
+            } else if ((wthCode >= 51 && wthCode <= 57) ||
+                       (wthCode >= 61 && wthCode <= 67) ||
+                       (wthCode >= 80 && wthCode <= 82)) {
                 lv_image_set_src(GUI_Image__mainScreen__wthIcon, &rain);
-            } else if ((wthCode >= 71 && wthCode <= 77) || (wthCode >= 85 && wthCode <= 86)) {
+            } else if ((wthCode >= 71 && wthCode <= 77) ||
+                       (wthCode >= 85 && wthCode <= 86)) {
                 lv_image_set_src(GUI_Image__mainScreen__wthIcon, &snow);
             } else if (wthCode >= 95 && wthCode <= 99) {
                 lv_image_set_src(GUI_Image__mainScreen__wthIcon, &thunder);
@@ -67,9 +74,11 @@ void DeskDashView::updateWeatherIcon(int wthCode, int isDay) {
             }
 
             if (isValidCode) {
-                lv_obj_remove_flag(GUI_Image__mainScreen__wthIcon, LV_OBJ_FLAG_HIDDEN);
+                lv_obj_remove_flag(GUI_Image__mainScreen__wthIcon,
+                                   LV_OBJ_FLAG_HIDDEN);
             } else {
-                lv_obj_add_flag(GUI_Image__mainScreen__wthIcon, LV_OBJ_FLAG_HIDDEN);
+                lv_obj_add_flag(GUI_Image__mainScreen__wthIcon,
+                                LV_OBJ_FLAG_HIDDEN);
             }
         } else {
             lv_obj_add_flag(GUI_Image__mainScreen__wthIcon, LV_OBJ_FLAG_HIDDEN);
@@ -80,7 +89,7 @@ void DeskDashView::updateWeatherIcon(int wthCode, int isDay) {
 
 void DeskDashView::updateLocation(const char *locationStr) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
-        lv_label_set_text(GUI_Label__mainScreen__locLabel, locationStr);
+        lv_label_set_text(GUI_Label__mainScreen__locationLabel, locationStr);
         xSemaphoreGive(xGuiSemaphore);
     }
 }
