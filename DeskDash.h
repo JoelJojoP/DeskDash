@@ -59,13 +59,16 @@
 #define TIME_UPDATE_EVENT (1 << 0)
 #define DAY_UPDATE_EVENT (1 << 1)
 #define WEATHER_UPDATE_EVENT (1 << 2)
-#define SCREEN_CHANGE_EVENT (1 << 3)
+#define FORECAST_UPDATE_EVENT (1 << 3)
+#define SCREEN_CHANGE_EVENT (1 << 4)
 
 extern SemaphoreHandle_t xGuiSemaphore;
 
 #if ACTIVE_LOG_LEVEL >= LOG_LEVEL_ERROR
 extern SemaphoreHandle_t xUartSemaphore;
 #endif
+
+extern bool initDone;
 
 typedef struct {
     float curTemp;
@@ -76,10 +79,19 @@ typedef struct {
 } WeatherInfo;
 
 typedef struct {
+    int hour;
+    float temperature;
+    int wthCode;
+    int isDay;
+} WeatherForecastInfo;
+
+typedef struct {
     struct tm timeInfo;
     WeatherInfo weather;
+    WeatherForecastInfo forecast[10];
     bool isTimeSynced;
     bool isWthInitDone;
+    bool isForecastInitDone;
 } DeskDashData;
 
 class DeskDashModel {
@@ -91,6 +103,7 @@ class DeskDashModel {
     DeskDashModel();
     int setConfig(const char *configFilePath);
     int updateWeather();
+    int updateForecast();
     void updateTime();
     int initData();
     DeskDashData getData();
@@ -99,14 +112,17 @@ class DeskDashModel {
 
 class DeskDashView {
   private:
+    void updateWeatherIcon(lv_obj_t *wthIcon, int wthCode, int isDay = 1);
   public:
     DeskDashView();
+    void toggleWifiIcon(bool isConnected);
     void changeScreen();
+    void toggleForecastPanel(bool show);
     void updateTime(const char *timeStr);
     void updateDate(const char *dateStr, const char *dayStr);
     void updateWeather(const char *curTempStr, const char *minMaxTempStr,
-                       const char *wthStr);
-    void updateWeatherIcon(int wthCode, int isDay = 1);
+                       const char *wthStr, int wthCode = -1, int isDay = 1);
+    void updateForecast(const char *timeStr, const char *tempStr, int wthCode, int isDay, int idx);
     void updateLocation(const char *locationStr);
 };
 

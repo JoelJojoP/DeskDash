@@ -105,11 +105,12 @@ void GUI_initScreen__mainScreen() {
     GUI_Container__mainScreen__fcContainer =
         lv_obj_create(GUI_Panel__mainScreen__weatherPanel);
     lv_obj_remove_style_all(GUI_Container__mainScreen__fcContainer);
-    lv_obj_remove_flag(GUI_Container__mainScreen__fcContainer,
-                       LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_flag(GUI_Container__mainScreen__fcContainer, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_set_scroll_dir(GUI_Container__mainScreen__fcContainer,
-                          LV_DIR_HOR);
+    lv_obj_add_flag(GUI_Container__mainScreen__fcContainer,
+                    LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_scrollbar_mode(GUI_Container__mainScreen__fcContainer,
+                              LV_SCROLLBAR_MODE_ACTIVE);
+    lv_obj_set_scroll_dir(GUI_Container__mainScreen__fcContainer, LV_DIR_HOR);
     lv_obj_set_align(GUI_Container__mainScreen__fcContainer,
                      LV_ALIGN_BOTTOM_LEFT);
     lv_obj_set_size(GUI_Container__mainScreen__fcContainer, 500, 160);
@@ -129,8 +130,8 @@ void GUI_initScreen__mainScreen() {
 
         GUI_Image__mainScreen__fcWthIcon[i] =
             lv_image_create(GUI_Container__mainScreen__fcPanel[i]);
-        lv_obj_add_flag(GUI_Image__mainScreen__fcWthIcon[i],
-                        LV_OBJ_FLAG_ADV_HITTEST);
+        lv_obj_remove_flag(GUI_Image__mainScreen__fcWthIcon[i],
+                        LV_OBJ_FLAG_CLICKABLE);
         lv_obj_remove_flag(GUI_Image__mainScreen__fcWthIcon[i],
                            LV_OBJ_FLAG_SCROLLABLE);
         lv_obj_set_align(GUI_Image__mainScreen__fcWthIcon[i], LV_ALIGN_TOP_MID);
@@ -141,7 +142,7 @@ void GUI_initScreen__mainScreen() {
         GUI_Label__mainScreen__fcTimeLabel[i] =
             lv_label_create(GUI_Container__mainScreen__fcPanel[i]);
         lv_label_set_long_mode(GUI_Label__mainScreen__fcTimeLabel[i],
-                               LV_LABEL_LONG_WRAP);
+                               LV_LABEL_LONG_CLIP);
         lv_obj_set_align(GUI_Label__mainScreen__fcTimeLabel[i],
                          LV_ALIGN_TOP_MID);
         lv_obj_set_y(GUI_Label__mainScreen__fcTimeLabel[i], 10);
@@ -151,7 +152,7 @@ void GUI_initScreen__mainScreen() {
         GUI_Label__mainScreen__fcTempLabel[i] =
             lv_label_create(GUI_Container__mainScreen__fcPanel[i]);
         lv_label_set_long_mode(GUI_Label__mainScreen__fcTempLabel[i],
-                               LV_LABEL_LONG_WRAP);
+                               LV_LABEL_LONG_CLIP);
         lv_obj_set_align(GUI_Label__mainScreen__fcTempLabel[i],
                          LV_ALIGN_TOP_MID);
         lv_obj_set_y(GUI_Label__mainScreen__fcTempLabel[i], 130);
@@ -226,6 +227,9 @@ void GUI_initScreenStyles__mainScreen() {
 
     lv_obj_add_style(GUI_Label__mainScreen__fcLabel, &GUI_Style__wthLabelStyle,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_style(GUI_Container__mainScreen__fcContainer,
+                     &GUI_Style__defaultBgStyle, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     for (int i = 0; i < 10; i++) {
         lv_image_set_src(GUI_Image__mainScreen__fcWthIcon[i], &sun);

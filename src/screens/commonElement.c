@@ -11,7 +11,6 @@ void GUI_initScreen__commonElement() {
     GUI_Panel__topLayer__sideBar = lv_obj_create(lv_layer_top());
     lv_obj_remove_flag(GUI_Panel__topLayer__sideBar, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_size(GUI_Panel__topLayer__sideBar, 100, 720);
-    lv_obj_add_flag(GUI_Panel__topLayer__sideBar, LV_OBJ_FLAG_HIDDEN);
 
     GUI_Button__topLayer__homeButton =
         lv_button_create(GUI_Panel__topLayer__sideBar);
@@ -75,6 +74,7 @@ void GUI_initScreen__commonElement() {
         lv_obj_create(GUI_Panel__topLayer__sideBar);
     lv_obj_remove_flag(GUI_Panel__topLayer__selIndicator,
                        LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(GUI_Panel__topLayer__selIndicator, LV_OBJ_FLAG_HIDDEN);
     lv_obj_set_align(GUI_Panel__topLayer__selIndicator, LV_ALIGN_TOP_RIGHT);
     lv_obj_set_x(GUI_Panel__topLayer__selIndicator, 20);
     lv_obj_set_size(GUI_Panel__topLayer__selIndicator, 10, 100);
@@ -87,7 +87,7 @@ void GUI_initScreenTexts__commonElement() {
     lv_label_set_text(GUI_Label__topLayer__homeLabel, HOME_ICON);
     lv_label_set_text(GUI_Label__topLayer__alarmLabel, ALARM_ICON);
     lv_label_set_text(GUI_Label__topLayer__settingLabel, SETTING_ICON);
-    lv_label_set_text(GUI_Label__topLayer__wifiLabel, WIFI_ICON);
+    lv_label_set_text(GUI_Label__topLayer__wifiLabel, REFRESH_ICON);
 }
 
 void GUI_initScreenStyles__commonElement() {

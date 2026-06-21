@@ -4,7 +4,7 @@
 #define INACTIVITY_TIMEOUT_MS 30000
 
 /* LVGL draw buffers. These are allocated from PSRAM for the full screen */
-#define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES * (LV_COLOR_DEPTH / 8))
+#define DRAW_BUF_SIZE (TFT_HOR_RES * TFT_VER_RES * (LV_COLOR_DEPTH / 8)) / 10
 void *drawBuf1 = NULL;
 void *drawBuf2 = NULL;
 
@@ -100,15 +100,17 @@ int connectToWiFi() {
             password = cfg["wifi"][i]["pwd"];
             WiFi.begin(ssid, password);
             attempts = 0;
-            while (WiFi.status() != WL_CONNECTED && attempts < 60) {
+            while (WiFi.status() != WL_CONNECTED && attempts < 100) {
                 vTaskDelay(pdMS_TO_TICKS(500));
                 attempts++;
             }
             if (WiFi.status() == WL_CONNECTED) {
                 LOG_INFO("Connected to WiFi: %s", ssid);
+                view.toggleWifiIcon(true);
                 return 0;
             } else {
                 LOG_WARN("Failed to connect to WiFi: %s", ssid);
+                view.toggleWifiIcon(false);
             }
         }
         LOG_ERROR("Failed to connect to any WiFi network");
@@ -121,6 +123,7 @@ void disconnectWiFi() {
         WiFi.disconnect(true);
     }
     WiFi.mode(WIFI_OFF);
+    view.toggleWifiIcon(false);
     xSemaphoreGive(xWifiSemaphore);
     LOG_INFO("Disconnected from WiFi");
 }
@@ -157,20 +160,21 @@ void initializeTask(void *pvParameters) {
     } else {
         status = model.initData();
         if (status != 0) {
-            LOG_ERROR("Failed to initialize data");
+            LOG_WARN("Some data was not initialized");
         } else {
             LOG_INFO("Data initialization completed");
-            initDone = true;
-            lv_display_trigger_activity(NULL);
-            xEventGroupSetBits(xDataEventGroup,
-                               TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
-                                   WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT);
-            xTaskCreatePinnedToCore(updateTimeTask, "UpdateTime", 4096, NULL, 1,
-                                    &xTimeUpdateTaskHandle, 0);
-            xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096,
-                                    NULL, 1, &xWeatherUpdateTaskHandle, 0);
         }
+
+        xEventGroupSetBits(xDataEventGroup,
+                           TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
+                               WEATHER_UPDATE_EVENT | FORECAST_UPDATE_EVENT |
+                               SCREEN_CHANGE_EVENT);
+        xTaskCreatePinnedToCore(updateTimeTask, "UpdateTime", 4096, NULL, 1,
+                                &xTimeUpdateTaskHandle, 0);
+        xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096, NULL,
+                                1, &xWeatherUpdateTaskHandle, 0);
     }
+
     disconnectWiFi();
     vTaskDelete(NULL);
 }
@@ -180,11 +184,11 @@ void updateViewTask(void *pvParameters) {
     DeskDashData data;
 
     while (1) {
-        uxBits =
-            xEventGroupWaitBits(xDataEventGroup,
-                                TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
-                                    WEATHER_UPDATE_EVENT | SCREEN_CHANGE_EVENT,
-                                pdTRUE, pdFALSE, portMAX_DELAY);
+        uxBits = xEventGroupWaitBits(
+            xDataEventGroup,
+            TIME_UPDATE_EVENT | DAY_UPDATE_EVENT | WEATHER_UPDATE_EVENT |
+                FORECAST_UPDATE_EVENT | SCREEN_CHANGE_EVENT,
+            pdTRUE, pdFALSE, portMAX_DELAY);
         data = model.getData();
 
         if (uxBits & TIME_UPDATE_EVENT && data.isTimeSynced) {
@@ -211,12 +215,25 @@ void updateViewTask(void *pvParameters) {
             snprintf(minMaxTempStr, sizeof(minMaxTempStr),
                      "H: %.1f° | L: %.1f°", data.weather.maxTemp,
                      data.weather.minTemp);
-            view.updateWeather(curTempStr, minMaxTempStr, wthStr);
-            view.updateWeatherIcon(data.weather.wthCode, data.weather.isDay);
+            view.updateWeather(curTempStr, minMaxTempStr, wthStr, data.weather.wthCode, data.weather.isDay);
+        }
+
+        if (uxBits & FORECAST_UPDATE_EVENT && data.isForecastInitDone) {
+            char fcTimeStr[6];
+            char fcTempStr[10];
+            for (int i = 0; i < 10; i++) {
+                snprintf(fcTimeStr, sizeof(fcTimeStr), "%02d:00", data.forecast[i].hour);
+                snprintf(fcTempStr, sizeof(fcTempStr), "%.1f°C",
+                         data.forecast[i].temperature);
+                view.updateForecast(fcTimeStr, fcTempStr, data.forecast[i].wthCode, data.forecast[i].isDay, i);
+            }
         }
 
         if (uxBits & SCREEN_CHANGE_EVENT) {
             view.changeScreen();
+            if (data.isForecastInitDone) {
+                view.toggleForecastPanel(true);
+            }
             view.updateLocation(model.getConfig()["city"]);
         }
     }
@@ -268,7 +285,7 @@ void updateWeatherTask(void *pvParameters) {
 /* Put the M5Tab5 to sleep */
 void go_sleep() {
     LOG_INFO("Entering sleep");
-    digitalWrite(DISP_BL_PIN, LOW);
+    ledcWrite(DISP_BL_PIN, 0);
     M5.Display.writecommand(0x28); // Display off
     // esp_light_sleep_start();
 }
@@ -277,7 +294,7 @@ void go_sleep() {
 void wake_up() {
     LOG_INFO("Waking up from sleep");
     M5.Display.writecommand(0x29); // Display on
-    digitalWrite(DISP_BL_PIN, HIGH);
+    ledcWrite(DISP_BL_PIN, 20);
 }
 
 /* Initial setup */
@@ -289,8 +306,8 @@ void setup() {
     LOG_INFO("Initializing M5Tab5");
     auto cfg = M5.config();
     M5.begin(cfg);
-    pinMode(DISP_BL_PIN, OUTPUT);
-    digitalWrite(DISP_BL_PIN, HIGH);
+    ledcAttach(DISP_BL_PIN, 200000, 8);
+    ledcWrite(DISP_BL_PIN, 20);
     // pinMode(TOUCH_INT_PIN, INPUT);
     // gpio_wakeup_enable((gpio_num_t)TOUCH_INT_PIN, GPIO_INTR_LOW_LEVEL);
     // esp_sleep_enable_gpio_wakeup();
@@ -320,7 +337,7 @@ void setup() {
     glbDisp = lv_display_create(TFT_HOR_RES, TFT_VER_RES);
     lv_display_set_flush_cb(glbDisp, lv_disp_flush);
     lv_display_set_buffers(glbDisp, drawBuf1, drawBuf2, DRAW_BUF_SIZE,
-                           LV_DISPLAY_RENDER_MODE_FULL);
+                           LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     glbIndev = lv_indev_create();
     lv_indev_set_type(glbIndev, LV_INDEV_TYPE_POINTER);
