@@ -18,7 +18,7 @@ A simple personal dashboard made using M5Tab5 on Arduino IDE.
 ## Features
 
 - Automatically syncs and displays time and date in 24-hour format.
-- Automatically fetches amd displays current weather data every 3 hours.
+- Automatically fetches amd displays current weather data every 1 hour.
 - Coming Soon...
 
 ## Getting Started
@@ -30,10 +30,10 @@ A simple personal dashboard made using M5Tab5 on Arduino IDE.
 ```
 https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json
 ```
-- Install the M5Stack board library from boards manager. (The code has been tested on v3.2.6)
+- Install the M5Stack board library from boards manager. (The code has been tested on v3.3.7)
 - Install the following libraries from the library manager:
     - `M5Unified` by M5Stack - v0.2.17
-    - `M5GFX` by M5Stack - v0.2.22
+    - `M5GFX` by M5Stack - v0.2.24
     - `lvgl` by kisvegabor - v9.3.0
     - `FreeRTOS` by Richard Barry - v11.1.0-3
     - `ArduinoJson` by Benoit Blanchon - v7.4.3
@@ -41,7 +41,7 @@ https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json
 
 ### Preparing the configuration data
 
-- Create a folder named `data` in the sketch folder. Make a copy of the `config_sample.json` file in that folder and rename it to `config.json`.
+- Make a copy of the `config_sample.json` file in the `data` folder and rename it to `config.json`.
 - Fill the data in the JSON file.
     - `gmtOffset` is the GMT offset in seconds
     - `dlOffset` is dayligt offset in seconds
