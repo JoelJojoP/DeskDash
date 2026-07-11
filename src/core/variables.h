@@ -41,6 +41,12 @@ extern lv_obj_t *GUI_Label__mainScreen__fcTimeLabel[10];
 extern lv_obj_t *GUI_Label__mainScreen__fcTempLabel[10];
 
 extern lv_obj_t *GUI_Screen__alarmScreen;
+extern lv_obj_t *GUI_Panel__alarmScreen__alarmPanel[4];
+extern lv_obj_t *GUI_Label__alarmScreen__alarmTimeLabel[4];
+extern lv_obj_t *GUI_Label__alarmScreen__alarmRepeatLabel[4];
+extern lv_obj_t *GUI_Switch__alarmScreen__alarmEnableSwitch[4];
+extern lv_obj_t *GUI_Button__alarmScreen__alarmAddButton;
+extern lv_obj_t *GUI_Label__alarmScreen__alarmAddLabel;
 
 #ifdef __cplusplus
 } /*extern "C"*/

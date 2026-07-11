@@ -59,7 +59,7 @@ static void lv_indev_read(lv_indev_t *indev_driver, lv_indev_data_t *data) {
         data->point.y = (720 - tp[0].x);
         data->state = LV_INDEV_STATE_PRESSED;
         if (isSleep) {
-            wake_up();
+            view.wakeUp();
             isSleep = false;
         }
     } else {
@@ -77,7 +77,7 @@ void lvgl_task(void *pvParameters) {
             lv_timer_handler();
             if ((lv_disp_get_inactive_time(NULL) > INACTIVITY_TIMEOUT_MS) &&
                 initDone && !isSleep) {
-                go_sleep();
+                view.goSleep();
                 isSleep = true;
             }
             xSemaphoreGive(xGuiSemaphore);
@@ -120,7 +120,7 @@ int connectToWiFi() {
 
 void disconnectWiFi() {
     if (WiFi.status() == WL_CONNECTED) {
-        WiFi.disconnect(true);
+        WiFi.disconnect(true, true);
     }
     WiFi.mode(WIFI_OFF);
     view.toggleWifiIcon(false);
@@ -151,8 +151,33 @@ void wthCodeToString(int wthCode, char *wthStr, size_t strSize) {
     }
 }
 
+void wthCodeToIcon(int wthCode, int isDay, const lv_image_dsc_t **icon) {
+    if (wthCode == 0) {
+        *icon = isDay ? &sun : &moon;
+    } else if (wthCode >= 1 && wthCode <= 2) {
+        *icon = isDay ? &sun_cloud : &moon_cloud;
+    } else if (wthCode == 3) {
+        *icon = &cloud;
+    } else if (wthCode >= 45 && wthCode <= 48) {
+        *icon = &haze;
+    } else if ((wthCode >= 51 && wthCode <= 57) ||
+               (wthCode >= 61 && wthCode <= 67) ||
+               (wthCode >= 80 && wthCode <= 82)) {
+        *icon = &rain;
+    } else if ((wthCode >= 71 && wthCode <= 77) ||
+               (wthCode >= 85 && wthCode <= 86)) {
+        *icon = &snow;
+    } else if (wthCode >= 95 && wthCode <= 99) {
+        *icon = &thunder;
+    } else {
+        *icon = NULL; // Unknown weather code
+    }
+}
+
 void initializeTask(void *pvParameters) {
     int status = 0;
+    int nextWthSyncDelay = 0;
+    DeskDashData data;
 
     status = connectToWiFi();
     if (status != 0) {
@@ -165,14 +190,19 @@ void initializeTask(void *pvParameters) {
             LOG_INFO("Data initialization completed");
         }
 
+        // Next weather sync should happen the next hour
+        data = model.getData();
+        nextWthSyncDelay = (60 - data.timeInfo.tm_min) * 60000;
+
         xEventGroupSetBits(xDataEventGroup,
                            TIME_UPDATE_EVENT | DAY_UPDATE_EVENT |
                                WEATHER_UPDATE_EVENT | FORECAST_UPDATE_EVENT |
                                SCREEN_CHANGE_EVENT);
         xTaskCreatePinnedToCore(updateTimeTask, "UpdateTime", 4096, NULL, 1,
                                 &xTimeUpdateTaskHandle, 0);
-        xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096, NULL,
-                                1, &xWeatherUpdateTaskHandle, 0);
+        xTaskCreatePinnedToCore(updateWeatherTask, "UpdateWeather", 4096,
+                                (void *)nextWthSyncDelay, 1,
+                                &xWeatherUpdateTaskHandle, 0);
     }
 
     disconnectWiFi();
@@ -209,23 +239,29 @@ void updateViewTask(void *pvParameters) {
             char curTempStr[10];
             char minMaxTempStr[25];
             char wthStr[20];
+            const lv_image_dsc_t *wthIcon = NULL;
             wthCodeToString(data.weather.wthCode, wthStr, sizeof(wthStr));
+            wthCodeToIcon(data.weather.wthCode, data.weather.isDay, &wthIcon);
             snprintf(curTempStr, sizeof(curTempStr), "%.1f°C",
                      data.weather.curTemp);
             snprintf(minMaxTempStr, sizeof(minMaxTempStr),
                      "H: %.1f° | L: %.1f°", data.weather.maxTemp,
                      data.weather.minTemp);
-            view.updateWeather(curTempStr, minMaxTempStr, wthStr, data.weather.wthCode, data.weather.isDay);
+            view.updateWeather(curTempStr, minMaxTempStr, wthStr, wthIcon);
         }
 
         if (uxBits & FORECAST_UPDATE_EVENT && data.isForecastInitDone) {
             char fcTimeStr[6];
             char fcTempStr[10];
+            const lv_image_dsc_t *wthIcon = NULL;
             for (int i = 0; i < 10; i++) {
-                snprintf(fcTimeStr, sizeof(fcTimeStr), "%02d:00", data.forecast[i].hour);
+                wthCodeToIcon(data.forecast[i].wthCode, data.forecast[i].isDay,
+                              &wthIcon);
+                snprintf(fcTimeStr, sizeof(fcTimeStr), "%02d:00",
+                         data.forecast[i].hour);
                 snprintf(fcTempStr, sizeof(fcTempStr), "%.1f°C",
                          data.forecast[i].temperature);
-                view.updateForecast(fcTimeStr, fcTempStr, data.forecast[i].wthCode, data.forecast[i].isDay, i);
+                view.updateForecast(i, fcTimeStr, fcTempStr, wthIcon);
             }
         }
 
@@ -235,6 +271,7 @@ void updateViewTask(void *pvParameters) {
                 view.toggleForecastPanel(true);
             }
             view.updateLocation(model.getConfig()["city"]);
+            lv_indev_enable(glbIndev, true);
         }
     }
 }
@@ -257,44 +294,60 @@ void updateTimeTask(void *pvParameters) {
 
 void updateWeatherTask(void *pvParameters) {
     int status = 0;
-    uint32_t waitDelay = 3600000; // Update weather every 1 hour
+    uint32_t weatherUpdateNotify;
+    DeskDashData data;
+    // Get the initial weather update delay based on the current time
+    int waitDelay = (int)pvParameters;
 
     while (1) {
-        vTaskDelay(pdMS_TO_TICKS(waitDelay)); // Retry every 10 minutes
+        weatherUpdateNotify =
+            ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(waitDelay));
         status = connectToWiFi();
         if (status != 0) {
-            // Retry every 10 minutes if WiFi connection fails
-            waitDelay = 600000;
-            LOG_WARN("Skipping weather update due to WiFi connection failure");
+            if (weatherUpdateNotify == 0) {
+                // Retry after 10 minutes if WiFi connection fails while
+                // auto-syncing
+                waitDelay = 600000;
+                LOG_WARN("Failed to connect to WiFi, retrying in 10 minutes");
+            } else {
+                // If the user manually triggered the update, just log the
+                // failure
+                LOG_WARN("WiFi connection failed, unable to update weather");
+            }
         } else {
             if (model.updateWeather() == 0) {
                 xEventGroupSetBits(xDataEventGroup, WEATHER_UPDATE_EVENT);
-                // Reset to 1 hour on successful update
-                waitDelay = 3600000;
+                // Next weather auto-sync should happen at the next hour
+                data = model.getData();
+                waitDelay = (60 - data.timeInfo.tm_min) * 60000;
                 LOG_INFO("Weather update successful");
             } else {
-                // Retry every 10 minutes if weather update fails
-                waitDelay = 600000;
-                LOG_WARN("Weather update failed");
+                if (weatherUpdateNotify == 0) {
+                    // If auto-syncing, retry every 10 minutes if weather update
+                    // fails
+                    waitDelay = 600000;
+                    LOG_WARN("Weather update failed. Retrying in 10 minutes");
+                } else {
+                    // If the user manually triggered the update, just log the
+                    // failure
+                    LOG_WARN("Weather update failed");
+                }
             }
         }
         disconnectWiFi();
+
+        if (weatherUpdateNotify != 0) {
+            // If the user manually triggered the update, clear the notification
+            // counter
+            ulTaskNotifyValueClear(xWeatherUpdateTaskHandle, 0xFFFFFFFF);
+            xTaskNotifyStateClear(xWeatherUpdateTaskHandle);
+        }
     }
 }
 
-/* Put the M5Tab5 to sleep */
-void go_sleep() {
-    LOG_INFO("Entering sleep");
-    ledcWrite(DISP_BL_PIN, 0);
-    M5.Display.writecommand(0x28); // Display off
-    // esp_light_sleep_start();
-}
-
-/* Wake up the M5Tab5 from sleep */
-void wake_up() {
-    LOG_INFO("Waking up from sleep");
-    M5.Display.writecommand(0x29); // Display on
-    ledcWrite(DISP_BL_PIN, 20);
+void wifiButtonCallback(lv_event_t *event) {
+    LOG_INFO("WiFi button clicked");
+    vTaskNotifyGiveFromISR(xWeatherUpdateTaskHandle, NULL);
 }
 
 /* Initial setup */
@@ -343,6 +396,7 @@ void setup() {
     lv_indev_set_type(glbIndev, LV_INDEV_TYPE_POINTER);
     lv_indev_set_display(glbIndev, glbDisp);
     lv_indev_set_read_cb(glbIndev, lv_indev_read);
+    lv_indev_enable(glbIndev, false);
 
     xGuiSemaphore = xSemaphoreCreateMutex();
     xDataEventGroup = xEventGroupCreate();
@@ -351,6 +405,8 @@ void setup() {
 
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         GUI_init();
+        lv_obj_add_event_cb(GUI_Button__topLayer__wifiButton,
+                            wifiButtonCallback, LV_EVENT_CLICKED, NULL);
         xSemaphoreGive(xGuiSemaphore);
     }
 

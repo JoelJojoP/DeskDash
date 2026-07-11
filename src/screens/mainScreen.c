@@ -182,29 +182,29 @@ void GUI_initScreenTexts__mainScreen() {
 }
 
 void GUI_initScreenStyles__mainScreen() {
-    lv_obj_add_style(GUI_Screen__mainScreen, &GUI_Style__defaultBgStyle,
+    lv_obj_add_style(GUI_Screen__mainScreen, &GUI_Style__defaultBg,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Label__mainScreen__timeLabel, &GUI_Style__timeStyle,
+    lv_obj_add_style(GUI_Label__mainScreen__timeLabel, &GUI_Style__interB132C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Label__mainScreen__dayLabel, &GUI_Style__dateDispStyle,
+    lv_obj_add_style(GUI_Label__mainScreen__dayLabel, &GUI_Style__poppins36C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__mainScreen__dateLabel,
-                     &GUI_Style__dateDispStyle,
+                     &GUI_Style__poppins36C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Panel__mainScreen__weatherPanel,
-                     &GUI_Style__defaultPanelStyle,
+                     &GUI_Style__defaultPanel,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__mainScreen__locationLabel,
-                     &GUI_Style__dateDispStyle,
+                     &GUI_Style__poppins36C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__mainScreen__tempLabel,
-                     &GUI_Style__tempDispStyle,
+                     &GUI_Style__inter80L_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_image_set_src(GUI_Image__mainScreen__wthIcon, &sun);
@@ -212,24 +212,24 @@ void GUI_initScreenStyles__mainScreen() {
     lv_image_set_scale_x(GUI_Image__mainScreen__wthIcon, 512);
     lv_image_set_scale_y(GUI_Image__mainScreen__wthIcon, 512);
 
-    lv_obj_add_style(GUI_Image__mainScreen__wthIcon, &GUI_Style__wthIconStyle,
+    lv_obj_add_style(GUI_Image__mainScreen__wthIcon, &GUI_Style__wthIcon,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Label__mainScreen__wthLabel, &GUI_Style__wthLabelStyle,
+    lv_obj_add_style(GUI_Label__mainScreen__wthLabel, &GUI_Style__poppins20C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__mainScreen__minMaxLabel,
-                     &GUI_Style__wthLabelStyle,
+                     &GUI_Style__poppins20C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Line__mainScreen__dividerLine, &GUI_Style__lineStyle,
+    lv_obj_add_style(GUI_Line__mainScreen__dividerLine, &GUI_Style__whiteLine,
                      0);
 
-    lv_obj_add_style(GUI_Label__mainScreen__fcLabel, &GUI_Style__wthLabelStyle,
+    lv_obj_add_style(GUI_Label__mainScreen__fcLabel, &GUI_Style__poppins20C_White,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Container__mainScreen__fcContainer,
-                     &GUI_Style__defaultBgStyle, LV_PART_MAIN | LV_STATE_DEFAULT);
+                     &GUI_Style__defaultBg, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     for (int i = 0; i < 10; i++) {
         lv_image_set_src(GUI_Image__mainScreen__fcWthIcon[i], &sun);
@@ -238,15 +238,15 @@ void GUI_initScreenStyles__mainScreen() {
         lv_image_set_scale_y(GUI_Image__mainScreen__fcWthIcon[i], 370);
 
         lv_obj_add_style(GUI_Image__mainScreen__fcWthIcon[i],
-                         &GUI_Style__fcWthIconStyle,
+                         &GUI_Style__forecastWthIcon,
                          LV_PART_MAIN | LV_STATE_DEFAULT);
 
         lv_obj_add_style(GUI_Label__mainScreen__fcTimeLabel[i],
-                         &GUI_Style__wthLabelStyle,
+                         &GUI_Style__poppins20C_White,
                          LV_PART_MAIN | LV_STATE_DEFAULT);
 
         lv_obj_add_style(GUI_Label__mainScreen__fcTempLabel[i],
-                         &GUI_Style__fcTempStyle,
+                         &GUI_Style__interB22L_White,
                          LV_PART_MAIN | LV_STATE_DEFAULT);
     }
 }

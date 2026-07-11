@@ -20,6 +20,7 @@ LV_FONT_DECLARE(inter80px);
 LV_FONT_DECLARE(poppins20px);
 LV_FONT_DECLARE(interbold22px);
 LV_FONT_DECLARE(fonta32px);
+LV_FONT_DECLARE(montserratlight80px);
 LV_IMG_DECLARE(sun);
 LV_IMG_DECLARE(moon);
 LV_IMG_DECLARE(sun_cloud);

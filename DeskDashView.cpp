@@ -8,8 +8,10 @@ void DeskDashView::toggleWifiIcon(bool isConnected) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         if (isConnected) {
             lv_label_set_text(GUI_Label__topLayer__wifiLabel, WIFI_ICON);
+            lv_obj_remove_flag(GUI_Button__topLayer__wifiButton, LV_OBJ_FLAG_CLICKABLE);
         } else {
             lv_label_set_text(GUI_Label__topLayer__wifiLabel, REFRESH_ICON);
+            lv_obj_add_flag(GUI_Button__topLayer__wifiButton, LV_OBJ_FLAG_CLICKABLE);
         }
         xSemaphoreGive(xGuiSemaphore);
     }
@@ -55,21 +57,31 @@ void DeskDashView::updateDate(const char *dateStr, const char *dayStr) {
 
 void DeskDashView::updateWeather(const char *curTempStr,
                                  const char *minMaxTempStr, const char *wthStr,
-                                 int wthCode, int isDay) {
+                                 const lv_image_dsc_t *wthIcon) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         lv_label_set_text(GUI_Label__mainScreen__tempLabel, curTempStr);
         lv_label_set_text(GUI_Label__mainScreen__minMaxLabel, minMaxTempStr);
         lv_label_set_text(GUI_Label__mainScreen__wthLabel, wthStr);
-        updateWeatherIcon(GUI_Image__mainScreen__wthIcon, wthCode, isDay);
+        if (wthIcon != NULL) {
+            lv_obj_remove_flag(GUI_Image__mainScreen__wthIcon, LV_OBJ_FLAG_HIDDEN);
+            lv_img_set_src(GUI_Image__mainScreen__wthIcon, wthIcon);
+        } else {
+            lv_obj_add_flag(GUI_Image__mainScreen__wthIcon, LV_OBJ_FLAG_HIDDEN);
+        }
         xSemaphoreGive(xGuiSemaphore);
     }
 }
 
-void DeskDashView::updateForecast(const char *timeStr, const char *tempStr, int wthCode, int isDay, int idx) {
+void DeskDashView::updateForecast(int idx, const char *timeStr, const char *tempStr, const lv_image_dsc_t *wthIcon) {
     if (xSemaphoreTake(xGuiSemaphore, portMAX_DELAY) == pdTRUE) {
         lv_label_set_text(GUI_Label__mainScreen__fcTimeLabel[idx], timeStr);
         lv_label_set_text(GUI_Label__mainScreen__fcTempLabel[idx], tempStr);
-        updateWeatherIcon(GUI_Image__mainScreen__fcWthIcon[idx], wthCode, isDay);
+        if (wthIcon != NULL) {
+            lv_obj_remove_flag(GUI_Image__mainScreen__fcWthIcon[idx], LV_OBJ_FLAG_HIDDEN);
+            lv_img_set_src(GUI_Image__mainScreen__fcWthIcon[idx], wthIcon);
+        } else {
+            lv_obj_add_flag(GUI_Image__mainScreen__fcWthIcon[idx], LV_OBJ_FLAG_HIDDEN);
+        }
         xSemaphoreGive(xGuiSemaphore);
     }
 }
@@ -81,45 +93,17 @@ void DeskDashView::updateLocation(const char *locationStr) {
     }
 }
 
-void DeskDashView::updateWeatherIcon(lv_obj_t *wthIcon, int wthCode,
-                                     int isDay) {
-    bool isValidCode = true;
-    if (wthCode != -1) {
-        if (wthCode == 0) {
-            if (isDay) {
-                lv_image_set_src(wthIcon, &sun);
-            } else {
-                lv_image_set_src(wthIcon, &moon);
-            }
-        } else if (wthCode >= 1 && wthCode <= 2) {
-            if (isDay) {
-                lv_image_set_src(wthIcon, &sun_cloud);
-            } else {
-                lv_image_set_src(wthIcon, &moon_cloud);
-            }
-        } else if (wthCode == 3) {
-            lv_image_set_src(wthIcon, &cloud);
-        } else if (wthCode >= 45 && wthCode <= 48) {
-            lv_image_set_src(wthIcon, &haze);
-        } else if ((wthCode >= 51 && wthCode <= 57) ||
-                   (wthCode >= 61 && wthCode <= 67) ||
-                   (wthCode >= 80 && wthCode <= 82)) {
-            lv_image_set_src(wthIcon, &rain);
-        } else if ((wthCode >= 71 && wthCode <= 77) ||
-                   (wthCode >= 85 && wthCode <= 86)) {
-            lv_image_set_src(wthIcon, &snow);
-        } else if (wthCode >= 95 && wthCode <= 99) {
-            lv_image_set_src(wthIcon, &thunder);
-        } else {
-            isValidCode = false;
-        }
+/* Put the M5Tab5 to sleep */
+void DeskDashView::goSleep() {
+    LOG_INFO("Entering sleep");
+    ledcWrite(DISP_BL_PIN, 0);
+    M5.Display.writecommand(0x28); // Display off
+    // esp_light_sleep_start();
+}
 
-        if (isValidCode) {
-            lv_obj_remove_flag(wthIcon, LV_OBJ_FLAG_HIDDEN);
-        } else {
-            lv_obj_add_flag(wthIcon, LV_OBJ_FLAG_HIDDEN);
-        }
-    } else {
-        lv_obj_add_flag(wthIcon, LV_OBJ_FLAG_HIDDEN);
-    }
+/* Wake up the M5Tab5 from sleep */
+void DeskDashView::wakeUp() {
+    LOG_INFO("Waking up from sleep");
+    M5.Display.writecommand(0x29); // Display on
+    ledcWrite(DISP_BL_PIN, 20);
 }

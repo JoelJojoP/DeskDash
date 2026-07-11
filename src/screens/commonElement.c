@@ -96,41 +96,41 @@ void GUI_initScreenStyles__commonElement() {
     lv_image_set_scale_x(GUI_Image__bottomLayer__bgImage, 2048);
     lv_image_set_scale_y(GUI_Image__bottomLayer__bgImage, 2048);
 
-    lv_obj_add_style(GUI_Image__bottomLayer__bgImage, &GUI_Style__bgImageStyle,
+    lv_obj_add_style(GUI_Image__bottomLayer__bgImage, &GUI_Style__bgImage,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Panel__topLayer__sideBar, &GUI_Style__sideBarStyle,
+    lv_obj_add_style(GUI_Panel__topLayer__sideBar, &GUI_Style__sideBar,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Button__topLayer__homeButton, &GUI_Style__sideButStyle,
+    lv_obj_add_style(GUI_Button__topLayer__homeButton, &GUI_Style__sidebarButton,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__topLayer__homeLabel,
-                     &GUI_Style__sideTextStyle,
+                     &GUI_Style__sidebarIcon,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Button__topLayer__alarmButton,
-                     &GUI_Style__sideButStyle, LV_PART_MAIN | LV_STATE_DEFAULT);
+                     &GUI_Style__sidebarButton, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__topLayer__alarmLabel,
-                     &GUI_Style__sideTextStyle,
+                     &GUI_Style__sidebarIcon,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Button__topLayer__settingButton,
-                     &GUI_Style__sideButStyle, LV_PART_MAIN | LV_STATE_DEFAULT);
+                     &GUI_Style__sidebarButton, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__topLayer__settingLabel,
-                     &GUI_Style__sideTextStyle,
+                     &GUI_Style__sidebarIcon,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_add_style(GUI_Button__topLayer__wifiButton, &GUI_Style__sideButStyle,
+    lv_obj_add_style(GUI_Button__topLayer__wifiButton, &GUI_Style__sidebarButton,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Label__topLayer__wifiLabel,
-                     &GUI_Style__sideTextStyle,
+                     &GUI_Style__sidebarIcon,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_add_style(GUI_Panel__topLayer__selIndicator,
-                     &GUI_Style__sideSelIndStyle,
+                     &GUI_Style__sidebarIndicator,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 }

@@ -11,6 +11,6 @@ void GUI_initScreen__splashScreen() {
 void GUI_initScreenTexts__splashScreen() {}
 
 void GUI_initScreenStyles__splashScreen() {
-    lv_obj_add_style(GUI_Screen__splashScreen, &GUI_Style__defaultBgStyle,
+    lv_obj_add_style(GUI_Screen__splashScreen, &GUI_Style__defaultBg,
                      LV_PART_MAIN | LV_STATE_DEFAULT);
 }

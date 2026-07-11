@@ -111,8 +111,6 @@ class DeskDashModel {
 };
 
 class DeskDashView {
-  private:
-    void updateWeatherIcon(lv_obj_t *wthIcon, int wthCode, int isDay = 1);
   public:
     DeskDashView();
     void toggleWifiIcon(bool isConnected);
@@ -121,9 +119,13 @@ class DeskDashView {
     void updateTime(const char *timeStr);
     void updateDate(const char *dateStr, const char *dayStr);
     void updateWeather(const char *curTempStr, const char *minMaxTempStr,
-                       const char *wthStr, int wthCode = -1, int isDay = 1);
-    void updateForecast(const char *timeStr, const char *tempStr, int wthCode, int isDay, int idx);
+                       const char *wthStr,
+                       const lv_image_dsc_t *wthIcon = NULL);
+    void updateForecast(int idx, const char *timeStr, const char *tempStr,
+                        const lv_image_dsc_t *wthIcon = NULL);
     void updateLocation(const char *locationStr);
+    void goSleep();
+    void wakeUp();
 };
 
 /* Function declarations */
